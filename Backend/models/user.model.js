@@ -22,9 +22,9 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true, // prevents duplicate users
-    lowercase: true, // store email in lowercase
-    trim: true, // remove extra spaces
+    unique: true,
+    lowercase: true,
+    trim: true,
     minlength: [5, "Email address must be at least 5 characters long"],
     match: [/^\S+@\S+\.\S+$/, "Invalid email address format"], // email format validation
   },
@@ -57,7 +57,7 @@ userSchema.methods.generateAuthToken = function () {
   return jwt.sign(
     { _id: this._id }, // payload
     process.env.JWT_SECRET, // secret key
-    { expiresIn: "7d" }, // token expiry for security
+    { expiresIn: "24h" }, // token expiry for security
   );
 };
 

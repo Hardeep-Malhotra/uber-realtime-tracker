@@ -1,7 +1,7 @@
 const userModel = require("../models/user.model");
 const userService = require("../services/user.service");
 const { validationResult } = require("express-validator");
-
+const blackListTokenModel = require("../models/blacklistToken.model");
 // ===============================
 // 📌 USER REGISTRATION CONTROLLER
 // Route: POST /users/register
@@ -41,51 +41,61 @@ module.exports.registerUser = async (req, res) => {
 // Route: POST /users/login
 // ===============================
 module.exports.loginUser = async (req, res) => {
-  // 🔍 Step 1: Validate login request data
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ error: errors.array() });
   }
 
-  // 📦 Step 2: Extract email and password from request body
   const { email, password } = req.body;
 
-  // 🔎 Step 3: Find user by email (include password field for comparison)
   const user = await userModel.findOne({ email }).select("+password");
 
-  // ❌ Step 4: If user not found
   if (!user) {
     return res.status(401).json({
       message: "Invalid credentials. Please check your email and password.",
     });
   }
 
-  // 🔐 Step 5: Compare entered password with hashed password
   const isMatch = await user.comparePassword(password);
 
-  // ❌ Step 6: If password does not match
   if (!isMatch) {
     return res.status(401).json({
       message: "Invalid credentials. Please check your email and password.",
     });
   }
 
-  // 🎟 Step 7: Generate JWT token
   const token = user.generateAuthToken();
 
- const Data = res.cookie("token", token, {
+  const Data = res.cookie("token", token, {
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000,
   });
- 
-  
-  // 🚫 Step 8: Remove password before sending response
+
   user.password = undefined;
 
-  // 📤 Step 9: Send success response
   res.status(200).json({ token, user });
 };
 
 module.exports.getUserProfile = async (req, res) => {
   res.status(200).json(req.user);
+};
+
+module.exports.logoutUser = async (req, res) => {
+  const token =
+    req.cookies.token ||
+    (req.headers.authorization && req.headers.authorization.split(" ")[1]);
+
+  console.log("Logout token:", token); // debug
+
+  if (!token) {
+    return res.status(400).json({ message: "Token missing" });
+  }
+
+  await blackListTokenModel.create({ token });
+
+  res.clearCookie("token");
+
+  res.status(200).json({
+    message: "User logged out successfully",
+  });
 };
