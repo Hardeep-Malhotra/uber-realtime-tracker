@@ -55,11 +55,9 @@ module.exports.loginUser = async (req, res) => {
 
   // ❌ Step 4: If user not found
   if (!user) {
-    return res
-      .status(401)
-      .json({
-        message: "Invalid credentials. Please check your email and password.",
-      });
+    return res.status(401).json({
+      message: "Invalid credentials. Please check your email and password.",
+    });
   }
 
   // 🔐 Step 5: Compare entered password with hashed password
@@ -67,19 +65,27 @@ module.exports.loginUser = async (req, res) => {
 
   // ❌ Step 6: If password does not match
   if (!isMatch) {
-    return res
-      .status(401)
-      .json({
-        message: "Invalid credentials. Please check your email and password.",
-      });
+    return res.status(401).json({
+      message: "Invalid credentials. Please check your email and password.",
+    });
   }
 
   // 🎟 Step 7: Generate JWT token
   const token = user.generateAuthToken();
 
+ const Data = res.cookie("token", token, {
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+ 
+  
   // 🚫 Step 8: Remove password before sending response
   user.password = undefined;
 
   // 📤 Step 9: Send success response
   res.status(200).json({ token, user });
+};
+
+module.exports.getUserProfile = async (req, res) => {
+  res.status(200).json(req.user);
 };
