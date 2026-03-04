@@ -547,3 +547,275 @@ _Logout functionality_
 _Token blacklist mechanism_
 
 _Automatic cleanup of expired tokens_
+
+
+
+# 🚍 Captain Registration API
+
+This endpoint allows a new **Captain (Bus Driver)** to register in the system.
+It validates input data, securely hashes the password using **bcrypt**, and generates a **JWT authentication token** for the captain.
+
+---
+
+# 📍 Endpoint
+
+```
+POST /captains/register
+```
+
+### Authentication
+
+❌ Public Route (No authentication required)
+
+### Content-Type
+
+```
+application/json
+```
+
+---
+
+# 📥 Request Body
+
+The request must be sent as a JSON object.
+
+| Field               | Type   | Required   | Description                                  |
+| ------------------- | ------ | ---------- | -------------------------------------------- |
+| fullname.firstname  | String | ✅ Yes      | First name of the captain (min 2 characters) |
+| fullname.lastname   | String | ❌ Optional | Last name of the captain                     |
+| email               | String | ✅ Yes      | Unique email address                         |
+| password            | String | ✅ Yes      | Minimum 8 characters                         |
+| vehicle.color       | String | ✅ Yes      | Vehicle color                                |
+| vehicle.plate       | String | ✅ Yes      | Vehicle plate number                         |
+| vehicle.capacity    | Number | ✅ Yes      | Passenger capacity                           |
+| vehicle.vehicleType | String | ✅ Yes      | Type of vehicle (bus, auto, car, van)        |
+
+---
+
+# 📦 Example Request Payload
+
+```json
+{
+  "fullname": {
+    "firstname": "Ravi",
+    "lastname": "Kumar"
+  },
+  "email": "driver.ravi@gmail.com",
+  "password": "securepass123",
+  "vehicle": {
+    "color": "Blue",
+    "plate": "HR02AB1234",
+    "capacity": 50,
+    "vehicleType": "bus"
+  }
+}
+```
+
+---
+
+# 🛡 Validation Rules
+
+The API validates incoming data using **express-validator** and Mongoose schema rules.
+
+### First Name
+
+* Minimum length: **2 characters**
+
+### Email
+
+* Must be a valid email format
+* Stored in lowercase
+* Must be **unique**
+
+### Password
+
+* Minimum length: **8 characters**
+* Automatically **hashed before saving**
+
+### Vehicle Information
+
+* Color must be at least **3 characters**
+* Plate number must be at least **3 characters**
+* Capacity must be **1 or greater**
+* Vehicle type must match allowed values
+
+Allowed vehicle types:
+
+```
+bus
+auto
+car
+van
+```
+
+---
+
+# 🔐 Security Implementation
+
+### Password Hashing
+
+Passwords are automatically hashed using **bcrypt** before being saved to the database.
+
+```
+bcrypt salt rounds: 10
+```
+
+This is implemented using a **Mongoose pre("save") middleware**.
+
+---
+
+### JWT Authentication Token
+
+After successful registration, the server generates a **JWT token**.
+
+Token configuration:
+
+```
+Algorithm: HS256
+Expiry: 24 hours
+Payload: { _id: captainId }
+```
+
+The token is returned to the client for authentication in protected routes.
+
+---
+
+# 📤 Success Response
+
+### Status Code
+
+```
+201 Created
+```
+
+### Example Response
+
+```json
+{
+  "token": "JWT_TOKEN",
+  "captain": {
+    "_id": "65a8f2a5e21f3c92f13a41d7",
+    "fullname": {
+      "firstname": "Ravi",
+      "lastname": "Kumar"
+    },
+    "email": "driver.ravi@gmail.com",
+    "vehicle": {
+      "color": "Blue",
+      "plate": "HR02AB1234",
+      "capacity": 50,
+      "vehicleType": "bus"
+    }
+  }
+}
+```
+
+⚠️ The password field is **never returned in the response**.
+
+---
+
+# ❌ Error Responses
+
+### Validation Error
+
+Status Code
+
+```
+400 Bad Request
+```
+
+Example
+
+```json
+{
+  "errors": [
+    {
+      "msg": "First name must be at least 2 characters long."
+    }
+  ]
+}
+```
+
+---
+
+### Duplicate Email Error
+
+Status Code
+
+```
+409 Conflict
+```
+
+Example
+
+```json
+{
+  "message": "Captain with this email already exists"
+}
+```
+
+---
+
+# 📂 Backend Architecture
+
+The captain registration flow follows a **layered backend architecture**.
+
+```
+Route
+ ↓
+Validator
+ ↓
+Controller
+ ↓
+Service
+ ↓
+Model
+ ↓
+Database
+```
+
+### File Structure
+
+```
+controllers/
+ └ captain.controller.js
+
+services/
+ └ captain.service.js
+
+models/
+ └ captain.model.js
+
+routes/
+ └ captain.routes.js
+```
+
+---
+
+# 🧪 Testing
+
+You can test this endpoint using:
+
+* Postman
+* Thunder Client
+* Curl
+* Frontend application
+
+Example URL:
+
+```
+http://localhost:4000/captains/register
+```
+
+---
+
+# 📌 Summary
+
+This endpoint handles:
+
+✔ Captain account creation\
+✔ Input validation\
+✔ Password hashing\
+✔ JWT token generation\
+✔ Secure response handling\
+✔ Vehicle information storage
