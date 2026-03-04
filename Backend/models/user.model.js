@@ -25,8 +25,8 @@ const userSchema = new mongoose.Schema({
     unique: true, // prevents duplicate users
     lowercase: true, // store email in lowercase
     trim: true, // remove extra spaces
-    minlength: [5, "Email must be at least 5 characters long"],
-    match: [/^\S+@\S+\.\S+$/, "Please enter a valid email address"], // email format validation
+    minlength: [5, "Email address must be at least 5 characters long"],
+    match: [/^\S+@\S+\.\S+$/, "Invalid email address format"], // email format validation
   },
 
   // Password (hidden by default using select: false)
@@ -45,10 +45,9 @@ const userSchema = new mongoose.Schema({
 // ====================================================
 // 🔐 Automatically hash password before saving
 // ====================================================
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);
-  next();
 });
 
 // =======================
