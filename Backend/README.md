@@ -203,7 +203,7 @@ The request must be a JSON object.
 }
 ```
 
-### 🛡️ Validation Rules
+## 🛡️ Validation Rules
 
 Email must be in valid format.
 
@@ -213,7 +213,7 @@ Both fields are required.
 
 Validation is handled using express-validator middleware.
 
-### 📤 Response Structure
+## 📤 Response Structure
 
 ✅ Success Response
 
@@ -236,7 +236,7 @@ Description: Login successful. JWT token generated.
 
 ⚠ Password is never returned in the response.
 
-### ❌ Error Responses
+## ❌ Error Responses
 
 400 Bad Request
 
@@ -303,3 +303,247 @@ _JWT-based authentication_
 _Protected user data handling_
 
 _Clean and structured API response_
+
+# 📄 Protected Routes Documentation
+
+## 🔐 Authentication System
+
+This API uses JWT (JSON Web Token) based authentication.
+After a successful login, the server issues a JWT token which can be used to access protected routes.
+
+_The token can be sent using:_
+
+_Authorization Header (Bearer Token)_
+
+_HTTP Cookies_
+
+Additionally, the system supports token blacklisting to invalidate tokens after logout.
+
+## 👤 Get User Profile
+
+Retrieve the authenticated user's profile information.
+
+## 📍 Endpoint
+
+**GET /users/profile**
+🔒 Authentication Required
+
+**Yes**
+
+_The request must include a valid JWT token._
+
+## 📥 Request Headers
+
+_Authorization (Bearer Token)_
+_Authorization: Bearer <JWT_TOKEN>_
+
+**Example:**
+
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+**OR**
+
+**Cookie**
+Cookie: token=<JWT_TOKEN>\*
+
+## ⚙️ Middleware Flow
+
+*T*he auth middleware performs the following checks:\*
+
+_Extracts the token from cookies or authorization header_
+
+_Checks whether the token exists in the blacklist database_
+
+_Verifies the JWT token_
+
+_Fetches the user from the database_
+
+_Attaches the user to the request object_
+
+**Example middleware logic:**
+
+const token =
+req.cookies.token ||
+(req.headers.authorization && req.headers.authorization.split(" ")[1]);
+
+## 📤 Success Response
+
+**Status Code**
+
+**200 OK**
+
+**Example Response:**
+
+```js
+{
+"\_id": "69a794fae6f71189d4be9366",
+"fullname": {
+"firstname": "Rahul",
+"lastname": "Verma"
+},
+"email": "rahul.verma01@gmail.com"
+}
+```
+
+## ❌ Error Responses
+
+**Unauthorized Access**
+
+Status Code
+
+401 Unauthorized
+
+Example Response
+
+```js
+{
+"message": "Unauthorized access"
+}
+```
+
+## Possible reasons:
+
+**Missing token**
+
+**Invalid token**
+
+**Expired token**
+
+**Token present in blacklist**
+
+# 🚪 Logout User
+
+**Logs out the authenticated user and invalidates the current token.**
+
+## 📍 Endpoint
+
+**GET /users/logout**
+
+## 🔒 Authentication Required
+
+**Yes**
+
+**A valid JWT token must be included in the request.**
+
+## ⚙️ Logout Process
+
+**_The logout route performs the following actions:_**
+
+**_Extracts the token from cookies or authorization header_**
+
+**_Stores the token inside the blacklisttokens collection_**
+
+**_Clears the authentication cookie_**
+
+**_Prevents further usage of the token_**
+
+## 📥 Request Headers
+
+_Authorization: Bearer <JWT_TOKEN>_
+
+**OR**
+
+_Cookie: token=<JWT_TOKEN>_
+
+## 📤 Success Response
+
+_Status Code_
+
+_200 OK_
+
+**Example Response:**
+
+```js
+{
+"message": "User logged out successfully"
+}
+```
+
+## 🚫 Token Blacklisting
+
+**When a user logs out, the token is stored inside a blacklist collection to prevent further usage.**
+
+_Example MongoDB Document:_
+
+```js
+{
+"\_id": "69a7e2a05301c33f3a50082b",
+"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+"createdAt": "2026-03-04T07:43:28.133Z"
+}
+```
+
+## ⏳ Automatic Token Expiration
+
+**The blacklist schema uses a TTL index.**
+
+**Example schema:**
+
+```js
+createdAt: {
+type: Date,
+default: Date.now,
+expires: 86400
+}
+```
+
+**This means:**
+
+\***\*24 hours after creation → token automatically deleted\*\***
+
+\***\*MongoDB automatically removes expired blacklist tokens.\*\***
+
+## 🔄 Authentication Flow
+
+**User Login**\
+**↓**\
+**JWT Token Generated**\
+**↓**\
+**Token stored in cookie / header**\
+**↓**\
+**User accesses protected routes**\
+**↓**\
+**Middleware verifies token**\
+**↓**\
+**User logs out**\
+**↓**\
+**Token stored in blacklist**\
+**↓**\
+**Token becomes invalid**\
+
+## 📁 Related Files
+
+**controllers/user.controller.js**
+**middlewares/auth.middleware.js**
+**routes/user.routes.js**
+**models/blacklistToken.model.js**
+
+These files work together to implement the authentication system.
+
+## 🔐 Security Features
+
+**The authentication system includes:**
+
+**JWT based authentication**
+
+**Password hashing using bcrypt**
+
+**HTTP-only cookies**
+
+**Token blacklisting**
+
+**Automatic token expiration using MongoDB TTL index**
+
+## 📌 Summary
+
+_The API provides a secure authentication system with:_
+
+_Protected routes_
+
+_Token verification middleware_
+
+_Logout functionality_
+
+_Token blacklist mechanism_
+
+_Automatic cleanup of expired tokens_
