@@ -56,7 +56,7 @@ const CaptainLogin = () => {
             </form>
             <p className='text-center text-sm text-gray-500 mt-4'>
                 Join the fleet? 
-               <Link to="/UserSignup" className='text-blue-500 hover:underline'> Register as a Captain</Link>
+               <Link to="/CaptainSignup" className='text-blue-500 hover:underline'> Register as a Captain</Link>
               </p>
         </div>
         <div>
