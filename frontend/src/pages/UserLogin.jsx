@@ -27,18 +27,18 @@ const UserLogin = () => {
 
       if (response.status === 200) {
         const data = response.data;
-
+  console.log(response.data)
         setUser(data.user);
         localStorage.setItem("token", data.token);
         toast.success("User successfully logged in.");
-          setTimeout(() => {
+          
           navigate("/home");
-        }, 1000);
+        
       }
     } catch (error) {
       if (error.response?.status === 401) {
         toast.error("Invalid email or password ❌");
-     s } else if (error.response?.status === 404) {
+      } else if (error.response?.status === 404) {
         toast.error("User not found ⚠️");
       } else {
         toast.error("Something went wrong. Please try again.");
@@ -90,7 +90,7 @@ const UserLogin = () => {
         </form>
         <p className="text-center text-sm text-gray-500 mt-4">
           Don't have an account?
-          <Link to="/UserSignup" className="text-blue-500 hover:underline">
+          <Link to="/user-signup" className="text-blue-500 hover:underline">
             {" "}
             Sign up
           </Link>

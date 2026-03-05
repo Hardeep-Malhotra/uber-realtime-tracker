@@ -40,9 +40,9 @@ const UserSignup = () => {
 
         toast.success("User successfully registered 🎉");
 
-        setTimeout(() => {
+        
           navigate("/home");
-        }, 1000);
+      
       }
     } catch (error) {
       if (error.response?.status === 409) {
@@ -116,7 +116,7 @@ const UserSignup = () => {
 
           <p className="text-center text-sm text-gray-500 mt-4">
             Already have an account?
-            <Link to="/UserLogin" className="text-blue-500 hover:underline">
+            <Link to="/user-login" className="text-blue-500 hover:underline">
               Login here
             </Link>
           </p>
