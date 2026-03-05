@@ -38,7 +38,7 @@ const UserLogin = () => {
     } catch (error) {
       if (error.response?.status === 401) {
         toast.error("Invalid email or password ❌");
-     s } else if (error.response?.status === 404) {
+      } else if (error.response?.status === 404) {
         toast.error("User not found ⚠️");
       } else {
         toast.error("Something went wrong. Please try again.");
@@ -98,7 +98,7 @@ const UserLogin = () => {
       </div>
       <div>
         <Link
-          to="/captain-login"
+          to="/CaptainLogin"
           className="bg-[#10b461] flex items-center justify-center text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base"
         >
           Sign in as Captain
