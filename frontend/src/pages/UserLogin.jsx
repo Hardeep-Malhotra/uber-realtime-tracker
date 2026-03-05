@@ -7,7 +7,7 @@ const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [ setUser] = useContext(UserDataContext);
+  const [user, setUser] = useContext(UserDataContext);
 
   const navigate = useNavigate();
 
@@ -36,6 +36,7 @@ const UserLogin = () => {
         
       }
     } catch (error) {
+      console.log("Login Error:", error);
       if (error.response?.status === 401) {
         toast.error("Invalid email or password ❌");
       } else if (error.response?.status === 404) {
@@ -44,7 +45,7 @@ const UserLogin = () => {
         toast.error("Something went wrong. Please try again.");
       }
 
-      console.log("Login Error:", error);
+      // console.log("Login Error:", error);
     }
 
     setEmail("");
