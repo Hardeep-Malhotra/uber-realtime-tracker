@@ -547,3 +547,603 @@ _Logout functionality_
 _Token blacklist mechanism_
 
 _Automatic cleanup of expired tokens_
+
+---
+
+# 🚍 Captain Registration API
+
+This section documents the Captain Authentication APIs used in the system.
+
+Captains (Bus Drivers) can use these endpoints to:
+
+Register a new captain account
+
+Log into the system securely
+
+Access their protected profile information
+
+Log out safely using token blacklisting
+
+All authentication is implemented using JWT (JSON Web Tokens) to ensure secure access to protected routes.
+
+During registration, the system validates the input data, securely hashes the password using bcrypt, and generates a JWT authentication token for the captain.
+This token is used to authenticate future requests to protected endpoints
+
+---
+
+# 📍 Endpoint
+
+```
+POST /captains/register
+```
+
+### Authentication
+
+❌ Public Route (No authentication required)
+
+### Content-Type
+
+```
+application/json
+```
+
+---
+
+# 📥 Request Body
+
+The request must be sent as a JSON object.
+
+| Field               | Type   | Required   | Description                                  |
+| ------------------- | ------ | ---------- | -------------------------------------------- |
+| fullname.firstname  | String | ✅ Yes      | First name of the captain (min 2 characters) |
+| fullname.lastname   | String | ❌ Optional | Last name of the captain                     |
+| email               | String | ✅ Yes      | Unique email address                         |
+| password            | String | ✅ Yes      | Minimum 8 characters                         |
+| vehicle.color       | String | ✅ Yes      | Vehicle color                                |
+| vehicle.plate       | String | ✅ Yes      | Vehicle plate number                         |
+| vehicle.capacity    | Number | ✅ Yes      | Passenger capacity                           |
+| vehicle.vehicleType | String | ✅ Yes      | Type of vehicle (bus, auto, car, van)        |
+
+---
+
+# 📦 Example Request Payload
+
+```json
+{
+  "fullname": {
+    "firstname": "Ravi",
+    "lastname": "Kumar"
+  },
+  "email": "driver.ravi@gmail.com",
+  "password": "securepass123",
+  "vehicle": {
+    "color": "Blue",
+    "plate": "HR02AB1234",
+    "capacity": 50,
+    "vehicleType": "bus"
+  }
+}
+```
+
+---
+
+# 🛡 Validation Rules
+
+The API validates incoming data using **express-validator** and Mongoose schema rules.
+
+### First Name
+
+* Minimum length: **2 characters**
+
+### Email
+
+* Must be a valid email format
+* Stored in lowercase
+* Must be **unique**
+
+### Password
+
+* Minimum length: **8 characters**
+* Automatically **hashed before saving**
+
+### Vehicle Information
+
+* Color must be at least **3 characters**
+* Plate number must be at least **3 characters**
+* Capacity must be **1 or greater**
+* Vehicle type must match allowed values
+
+Allowed vehicle types:
+
+```
+bus
+auto
+car
+van
+```
+
+---
+
+# 🔐 Security Implementation
+
+### Password Hashing
+
+Passwords are automatically hashed using **bcrypt** before being saved to the database.
+
+```
+bcrypt salt rounds: 10
+```
+
+This is implemented using a **Mongoose pre("save") middleware**.
+
+---
+
+### JWT Authentication Token
+
+After successful registration, the server generates a **JWT token**.
+
+Token configuration:
+
+```
+Algorithm: HS256
+Expiry: 24 hours
+Payload: { _id: captainId }
+```
+
+The token is returned to the client for authentication in protected routes.
+
+---
+
+# 📤 Success Response
+
+### Status Code
+
+```
+201 Created
+```
+
+### Example Response
+
+```json
+{
+  "token": "JWT_TOKEN",
+  "captain": {
+    "_id": "65a8f2a5e21f3c92f13a41d7",
+    "fullname": {
+      "firstname": "Ravi",
+      "lastname": "Kumar"
+    },
+    "email": "driver.ravi@gmail.com",
+    "vehicle": {
+      "color": "Blue",
+      "plate": "HR02AB1234",
+      "capacity": 50,
+      "vehicleType": "bus"
+    }
+  }
+}
+```
+
+⚠️ The password field is **never returned in the response**.
+
+---
+
+# ❌ Error Responses
+
+### Validation Error
+
+Status Code
+
+```
+400 Bad Request
+```
+
+Example
+
+```json
+{
+  "errors": [
+    {
+      "msg": "First name must be at least 2 characters long."
+    }
+  ]
+}
+```
+
+---
+
+### Duplicate Email Error
+
+Status Code
+
+```
+409 Conflict
+```
+
+Example
+
+```json
+{
+  "message": "Captain with this email already exists"
+}
+```
+
+---
+
+# 📂 Backend Architecture
+
+The captain registration flow follows a **layered backend architecture**.
+
+```
+Route
+ ↓
+Validator
+ ↓
+Controller
+ ↓
+Service
+ ↓
+Model
+ ↓
+Database
+```
+
+### File Structure
+
+```
+controllers/
+ └ captain.controller.js
+
+services/
+ └ captain.service.js
+
+models/
+ └ captain.model.js
+
+routes/
+ └ captain.routes.js
+```
+
+---
+
+# 🧪 Testing
+
+You can test this endpoint using:
+
+* Postman
+* Thunder Client
+* Curl
+* Frontend application
+
+Example URL:
+
+```
+http://localhost:4000/captains/register
+```
+
+---
+
+# 📌 Summary
+
+This endpoint handles:
+
+✔ Captain account creation\
+✔ Input validation\
+✔ Password hashing\
+✔ JWT token generation\
+✔ Secure response handling\
+✔ Vehicle information storage
+
+
+
+
+---
+
+# 🔑 Captain Login
+
+Authenticates an existing captain and generates a **JWT authentication token**.
+
+---
+
+## 📍 Endpoint
+
+```
+POST /captains/login
+```
+
+### Authentication
+
+❌ Public Route (No authentication required)
+
+### Content-Type
+
+```
+application/json
+```
+
+---
+
+# 📥 Request Body
+
+| Field    | Type   | Required | Description                        |
+| -------- | ------ | -------- | ---------------------------------- |
+| email    | String | ✅ Yes    | Captain's registered email address |
+| password | String | ✅ Yes    | Captain account password           |
+
+---
+
+# 📦 Example Request
+
+```json
+{
+  "email": "driver.ravi@gmail.com",
+  "password": "securepass123"
+}
+```
+
+---
+
+# 🔐 Login Process
+
+The login endpoint performs the following steps:
+
+1. Validate request body using **express-validator**
+2. Find captain using email
+3. Compare password using **bcrypt**
+4. Generate **JWT authentication token**
+5. Send token in response and cookie
+
+---
+
+# 📤 Success Response
+
+### Status Code
+
+```
+200 OK
+```
+
+### Example Response
+
+```json
+{
+  "token": "JWT_TOKEN",
+  "captain": {
+    "_id": "65b7a91f0f3211c1a91b0e2f",
+    "fullname": {
+      "firstname": "Ravi",
+      "lastname": "Kumar"
+    },
+    "email": "driver.ravi@gmail.com"
+  }
+}
+```
+
+⚠️ The password field is **never returned** in the response.
+
+---
+
+# ❌ Error Response
+
+### Invalid Credentials
+
+Status Code
+
+```
+401 Unauthorized
+```
+
+Example
+
+```json
+{
+  "message": "Invalid credentials. Please check your email and password."
+}
+```
+
+---
+
+# 👤 Captain Profile
+
+Returns the authenticated captain's profile information.
+
+This route is **protected** and requires a valid JWT token.
+
+---
+
+## 📍 Endpoint
+
+```
+GET /captains/profile
+```
+
+### Authentication
+
+✅ Required
+
+---
+
+# 🔐 Authentication Method
+
+Token must be sent in the request header.
+
+```
+Authorization: Bearer JWT_TOKEN
+```
+
+The authentication middleware performs the following checks:
+
+1. Extract JWT token from **cookie or Authorization header**
+2. Check if token is **blacklisted**
+3. Verify token using **JWT_SECRET**
+4. Retrieve captain from database
+
+---
+
+# 📤 Success Response
+
+### Status Code
+
+```
+200 OK
+```
+
+### Example Response
+
+```json
+{
+  "_id": "65b7a91f0f3211c1a91b0e2f",
+  "fullname": {
+    "firstname": "Ravi",
+    "lastname": "Kumar"
+  },
+  "email": "driver.ravi@gmail.com",
+  "vehicle": {
+    "color": "Blue",
+    "plate": "HR02AB1234",
+    "capacity": 50,
+    "vehicleType": "bus"
+  },
+  "status": "inactive"
+}
+```
+
+---
+
+# ❌ Unauthorized Response
+
+Status Code
+
+```
+401 Unauthorized
+```
+
+Example
+
+```json
+{
+  "message": "Unauthorized access"
+}
+```
+
+---
+
+# 🚪 Captain Logout
+
+Logs out the captain by **blacklisting the current JWT token**.
+
+Once logged out, the same token **cannot be used again**.
+
+---
+
+## 📍 Endpoint
+
+```
+GET /captains/logout
+```
+
+### Authentication
+
+✅ Required
+
+---
+
+# 🔐 Logout Process
+
+The logout endpoint performs the following operations:
+
+1. Extract authentication token
+2. Store token in **blacklistTokens collection**
+3. Clear authentication cookie
+4. Prevent token reuse
+
+---
+
+# 📤 Success Response
+
+### Status Code
+
+```
+200 OK
+```
+
+### Example Response
+
+```json
+{
+  "message": "Captain logged out successfully"
+}
+```
+
+---
+
+# 🗄 Blacklisted Token Example
+
+Tokens are stored in the **blacklistTokens collection**.
+
+Example document:
+
+```json
+{
+  "_id": "65b7aa3a0f3211c1a91b0e30",
+  "token": "JWT_TOKEN",
+  "createdAt": "2026-03-04T10:30:00Z"
+}
+```
+
+The collection uses a **TTL index** to automatically delete expired tokens.
+
+---
+
+# 🧪 Testing the APIs
+
+You can test these APIs using:
+
+* Postman
+* Thunder Client
+* Curl
+* Frontend application
+
+Example base URL:
+
+```
+http://localhost:4000
+```
+
+---
+
+# 📌 Captain Authentication Routes Summary
+
+| Method | Route             | Description          |
+| ------ | ----------------- | -------------------- |
+| POST   | /captains/login   | Authenticate captain |
+| GET    | /captains/profile | Get captain profile  |
+| GET    | /captains/logout  | Logout captain       |
+
+---
+
+# 🏗 Authentication Architecture
+
+The system follows a modular backend architecture:
+
+```
+Routes
+ ↓
+Controller
+ ↓
+Service
+ ↓
+Model
+ ↓
+Database
+```
+
+Key Components:
+
+* JWT Authentication
+* Cookie Support
+* Password Hashing (bcrypt)
+* Token Blacklisting
+* Authentication Middleware
+
+This ensures a **secure and scalable authentication system** for captain accounts.
