@@ -1,4 +1,4 @@
-import React, { use, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const Captainsignup = () => {
@@ -6,7 +6,7 @@ const Captainsignup = () => {
     const [second, setsecond] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [userdata, setuserdata] = useState({
+    const [ setuserdata] = useState({
       firstName: '',
       lastName: '',
       email: '',
