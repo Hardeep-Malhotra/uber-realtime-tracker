@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 import React, { useState, useContext } from "react";
@@ -29,6 +30,49 @@ const Captainsignup = () => {
     if (vehicleType === "moto" && capacity > 2) {
       toast.error("Moto capacity cannot exceed 2");
       return false;
+=======
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+
+const Captainsignup = () => {
+    const [first, setfirst] = useState('')
+    const [second, setsecond] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [ setuserdata] = useState({
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: ''
+    })
+    
+    const submitHandler = (e) => {
+      e.preventDefault()
+  
+      setuserdata({
+        fullName:{
+          firstName: first,
+          lastName: second
+        },
+        email: email,
+        password: password
+      })
+      setEmail('')
+      setPassword('')
+      setfirst('')
+      setsecond('')
+      
+  
+      // Here you would typically handle form submission, e.g., send data to your backend API
+      console.log('User Data on submit:', {
+        username:{
+          firstName: first,
+          lastName: second
+        },
+        email: email,
+        password: password
+      })
+>>>>>>> 62da80499ec5ee40f39bcd239da7347902412cab
     }
 
     if (vehicleType === "auto" && capacity > 3) {

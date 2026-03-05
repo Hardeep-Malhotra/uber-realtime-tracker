@@ -9,7 +9,6 @@ const CaptainLogin = () => {
   const [password, setPassword] = useState("");
 
   const { setCaptain } = useContext(CaptainDataContext);
-
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
@@ -23,24 +22,19 @@ const CaptainLogin = () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/captains/login`,
-        captainData,
+        captainData
       );
 
       if (response.status === 200) {
         const data = response.data;
-
         setCaptain(data.captain);
-
         localStorage.setItem("captain-token", data.token);
-
         toast.success("Captain logged in successfully 🚌");
-
         navigate("/captain-home");
       }
     } catch (error) {
       console.log("Backend Error:", error.response?.data);
       toast.error("Invalid email or password ❌");
-      console.log("Captain Login Error:", error);
     }
 
     setEmail("");
@@ -58,7 +52,6 @@ const CaptainLogin = () => {
 
         <form onSubmit={submitHandler}>
           <h3 className="text-lg font-medium mb-2">What's your email</h3>
-
           <input
             required
             type="email"
@@ -69,7 +62,6 @@ const CaptainLogin = () => {
           />
 
           <h3 className="text-lg font-medium mb-2">Enter Password</h3>
-
           <input
             required
             type="password"
@@ -85,7 +77,7 @@ const CaptainLogin = () => {
         </form>
 
         <p className="text-center text-sm text-gray-500 mt-4">
-          Join the fleet?
+          Join the fleet?{" "}
           <Link to="/captain-signup" className="text-blue-500 hover:underline">
             Register as a Captain
           </Link>
@@ -94,8 +86,8 @@ const CaptainLogin = () => {
 
       <div>
         <Link
-          to="/user-signup"
-          className="bg-[#d5622d] flex items-center justify-center text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base"
+          to="/user-login"
+          className="bg-[#d5622d] flex items-center justify-center text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-lg"
         >
           Sign in as User
         </Link>
