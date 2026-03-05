@@ -15,7 +15,13 @@ module.exports.registerUser = async (req, res) => {
 
   // 📦 Step 2: Extract required fields from request body
   const { fullname, email, password } = req.body;
+  const isUserAlreadyExist = await userModel.findOne({ email });
 
+  if (isUserAlreadyExist) {
+    return res.status(409).json({
+      message: "User with this email already exists",
+    });
+  }
   // 👤 Step 3: Create new user instance (password will be hashed via pre("save") middleware)
   const user = await userService.createUser({
     fullname,
