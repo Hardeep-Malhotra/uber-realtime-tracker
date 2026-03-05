@@ -82,8 +82,14 @@ module.exports.loginUser = async (req, res) => {
   res.status(200).json({ token, user });
 };
 
+// module.exports.getUserProfile = async (req, res) => {
+//   res.status(200).json(req.user);
+// };
 module.exports.getUserProfile = async (req, res) => {
-  res.status(200).json(req.user);
+  res.set("Cache-Control", "no-store");
+  res.status(200).json({
+    user: req.user,
+  });
 };
 
 module.exports.logoutUser = async (req, res) => {

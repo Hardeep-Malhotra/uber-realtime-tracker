@@ -27,13 +27,13 @@ const UserLogin = () => {
 
       if (response.status === 200) {
         const data = response.data;
-
+  console.log(response.data)
         setUser(data.user);
         localStorage.setItem("token", data.token);
         toast.success("User successfully logged in.");
-          setTimeout(() => {
+          
           navigate("/home");
-        }, 1000);
+        
       }
     } catch (error) {
       if (error.response?.status === 401) {
@@ -90,7 +90,7 @@ const UserLogin = () => {
         </form>
         <p className="text-center text-sm text-gray-500 mt-4">
           Don't have an account?
-          <Link to="/UserSignup" className="text-blue-500 hover:underline">
+          <Link to="/user-signup" className="text-blue-500 hover:underline">
             {" "}
             Sign up
           </Link>
@@ -98,7 +98,7 @@ const UserLogin = () => {
       </div>
       <div>
         <Link
-          to="/CaptainLogin"
+          to="/captain-signup"
           className="bg-[#10b461] flex items-center justify-center text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base"
         >
           Sign in as Captain

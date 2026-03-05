@@ -21,7 +21,7 @@ function UserLogout() {
 
         localStorage.removeItem("token");
         toast.success("User successfully logged out 👋");
-        navigate("/UserLogin");
+        navigate("/user-login");
 
       }
 
