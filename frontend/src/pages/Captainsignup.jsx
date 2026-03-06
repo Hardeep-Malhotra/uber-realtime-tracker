@@ -44,6 +44,11 @@ const Captainsignup = () => {
     e.preventDefault();
     if (!validateCapacity()) return;
 
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
     const newCaptain = {
       fullname: {
         firstname: first,
@@ -92,11 +97,7 @@ const Captainsignup = () => {
   return (
     <div className="py-5 px-5 h-screen flex flex-col justify-between">
       <div>
-        <img
-          className="w-20 mb-3"
-          src={driverLogo}
-          alt="uber driver"
-        />
+        <img className="w-20 mb-3" src={driverLogo} alt="uber driver" />
 
         <form onSubmit={submitHandler}>
           <h3 className="text-lg font-medium mb-2">

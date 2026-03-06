@@ -14,7 +14,10 @@ const UserSignup = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
     const newUser = {
       fullname: {
         firstname: first,
@@ -34,14 +37,12 @@ const UserSignup = () => {
         const data = response.data;
 
         setUser(data.user);
-      
+
         localStorage.setItem("token", data.token);
 
         toast.success("User successfully registered 🎉");
 
-        
-          navigate("/home");
-      
+        navigate("/home");
       }
     } catch (error) {
       if (error.response?.status === 409) {
@@ -100,6 +101,7 @@ const UserSignup = () => {
 
             <h3 className="text-lg font-medium mb-2">Enter Password</h3>
 
+        
             <input
               className="bg-[#eeeeee] mb-6 rounded px-4 py-2 border w-full text-lg"
               type="password"
@@ -107,7 +109,6 @@ const UserSignup = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-
             <button className="w-full bg-black text-white py-3 rounded mt-5">
               Create Account
             </button>

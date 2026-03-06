@@ -13,7 +13,10 @@ const UserLogin = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
     const userData = {
       email: email,
       password: password,
@@ -27,13 +30,12 @@ const UserLogin = () => {
 
       if (response.status === 200) {
         const data = response.data;
-  console.log(response.data)
+        console.log(response.data);
         setUser(data.user);
         localStorage.setItem("token", data.token);
         toast.success("User successfully logged in.");
-          
-          navigate("/home");
-        
+
+        navigate("/home");
       }
     } catch (error) {
       console.log("Login Error:", error);
@@ -74,6 +76,16 @@ const UserLogin = () => {
           />
 
           <h3 className="text-lg font-medium mb-2">Enter Password</h3>
+          {/* <input
+            required
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="bg-[#eeeeee] mb-7 rounded px-4 py-2 border w-full text-lg placeholder:text-base"
+            name="password"
+            id="password"
+            placeholder="Enter Password"
+          /> */}
           <input
             required
             type="password"

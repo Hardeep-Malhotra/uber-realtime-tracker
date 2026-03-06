@@ -45,7 +45,7 @@ router.post(
 
     // Vehicle Type
     body("vehicle.vehicleType")
-      .isIn(["bus", "auto", "car", "van"])
+      .isIn(["bus", "auto", "car", "moto"])
       .withMessage("Invalid vehicle type. Allowed types: bus, auto, car, van"),
   ],
 
