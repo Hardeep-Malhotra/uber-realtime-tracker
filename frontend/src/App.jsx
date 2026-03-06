@@ -3,7 +3,7 @@ import { Toaster } from "react-hot-toast";
 
 // Pages
 import Start from "./pages/Start";
-
+import Riding from './pages/Riding'
 import UserLogin from "./pages/UserLogin";
 import UserSignup from "./pages/UserSignup";
 import Home from "./pages/Home";
@@ -31,6 +31,7 @@ const App = () => {
         {/* User Authentication */}
         <Route path="/user-login" element={<UserLogin />} />
         <Route path="/user-signup" element={<UserSignup />} />
+        <Route path="/Riding" element={<Riding/>} />
 
         {/* User Protected Routes */}
         <Route
