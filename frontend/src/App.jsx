@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import 'remixicon/fonts/remixicon.css'
 
 // Pages
 import Start from "./pages/Start";
@@ -17,6 +18,7 @@ import CaptainLogout from "./pages/CaptainLogout";
 // Protected Wrappers
 import UserProtectedWrapper from "./pages/UserProtectedWrapper";
 import CaptainProtectWrapper from "./pages/CaptainProtectedWrapper";
+import CaptainRiding from "./pages/CaptainRiding";
 
 const App = () => {
   return (
@@ -32,6 +34,7 @@ const App = () => {
         <Route path="/user-login" element={<UserLogin />} />
         <Route path="/user-signup" element={<UserSignup />} />
         <Route path="/Riding" element={<Riding/>} />
+        <Route path="/captian-riding" element={<CaptainRiding/>} />
 
         {/* User Protected Routes */}
         <Route

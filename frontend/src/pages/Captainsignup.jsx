@@ -95,7 +95,7 @@ const Captainsignup = () => {
   };
 
   return (
-    <div className="py-5 px-5 h-screen flex flex-col justify-between">
+    <div className="py-2 px-4 h-screen flex flex-col justify-between">
       <div>
         <img className="w-20 mb-3" src={driverLogo} alt="uber driver" />
 
@@ -199,6 +199,15 @@ const Captainsignup = () => {
           </Link>
         </p>
       </div>
+      <div>
+          <p className="text-[10px] leading-tight text-gray-500 text-center mt-4">
+            This site is protected by reCAPTCHA and the
+            <span className="underline"> Google Privacy Policy </span>
+            and
+            <span className="underline"> Terms of Service</span>
+            apply.
+          </p>
+        </div>
     </div>
   );
 };
