@@ -200,14 +200,14 @@ const Captainsignup = () => {
         </p>
       </div>
       <div>
-          <p className="text-[10px] leading-tight text-gray-500 text-center mt-4">
-            This site is protected by reCAPTCHA and the
-            <span className="underline"> Google Privacy Policy </span>
-            and
-            <span className="underline"> Terms of Service</span>
-            apply.
-          </p>
-        </div>
+        <p className="text-[10px] leading-tight text-gray-500 text-center mt-4">
+          This site is protected by reCAPTCHA and the
+          <span className="underline"> Google Privacy Policy </span>
+          and
+          <span className="underline"> Terms of Service</span>
+          apply.
+        </p>
+      </div>
     </div>
   );
 };

@@ -70,42 +70,42 @@ const Home = () => {
     [vehiclePanel],
   );
 
-    useGSAP(function () {
-        if (confirmRidePanel) {
-            gsap.to(confirmRidePanelRef.current, {
-                transform: 'translateY(0)'
-            })
-        } else {
-            gsap.to(confirmRidePanelRef.current, {
-                transform: 'translateY(100%)'
-            })
-        }
-    }, [ confirmRidePanel ])
+  useGSAP(function () {
+    if (confirmRidePanel) {
+      gsap.to(confirmRidePanelRef.current, {
+        transform: 'translateY(0)'
+      })
+    } else {
+      gsap.to(confirmRidePanelRef.current, {
+        transform: 'translateY(100%)'
+      })
+    }
+  }, [confirmRidePanel])
 
 
-        useGSAP(function () {
-        if (vehicleFound) {
-            gsap.to(vehicleFoundRef.current, {
-                transform: 'translateY(0)'
-            })
-        } else {
-            gsap.to(vehicleFoundRef.current, {
-                transform: 'translateY(100%)'
-            })
-        }
-    }, [ vehicleFound])
+  useGSAP(function () {
+    if (vehicleFound) {
+      gsap.to(vehicleFoundRef.current, {
+        transform: 'translateY(0)'
+      })
+    } else {
+      gsap.to(vehicleFoundRef.current, {
+        transform: 'translateY(100%)'
+      })
+    }
+  }, [vehicleFound])
 
-        useGSAP(function () {
-        if (waitingForDriver) {
-            gsap.to(WaitingForDriverRef.current, {
-                transform: 'translateY(0)'
-            })
-        } else {
-            gsap.to(WaitingForDriverRef.current, {
-                transform: 'translateY(100%)'
-            })
-        }
-    }, [waitingForDriver])
+  useGSAP(function () {
+    if (waitingForDriver) {
+      gsap.to(WaitingForDriverRef.current, {
+        transform: 'translateY(0)'
+      })
+    } else {
+      gsap.to(WaitingForDriverRef.current, {
+        transform: 'translateY(100%)'
+      })
+    }
+  }, [waitingForDriver])
 
 
 
@@ -179,25 +179,25 @@ const Home = () => {
         ref={vehiclePanelRef}
         className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 pt-12 py-10"
       >
-        <VehiclePanel setconfirmRidePanel={setconfirmRidePanel} setVehiclePanel={setvehiclePanel}/>
-        
+        <VehiclePanel setconfirmRidePanel={setconfirmRidePanel} setVehiclePanel={setvehiclePanel} />
+
       </div>
       <div
         ref={confirmRidePanelRef}
         className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 pt-14 py-6"
       >
-       <ConfirmRide setconfirmRidePanel={setconfirmRidePanel} setvehicleFound={setvehicleFound}/>
-        
-      </div>
-       <div
-       ref={vehicleFoundRef}
-        className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 pt-14 py-6">
-          <LookingForDriver setvehicleFound={setvehicleFound}/>
+        <ConfirmRide setconfirmRidePanel={setconfirmRidePanel} setvehicleFound={setvehicleFound} />
+
       </div>
       <div
-       ref={WaitingForDriverRef}
+        ref={vehicleFoundRef}
+        className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 pt-14 py-6">
+        <LookingForDriver setvehicleFound={setvehicleFound} />
+      </div>
+      <div
+        ref={WaitingForDriverRef}
         className="fixed w-full z-10 bottom-0  bg-white px-3 pt-14 py-6">
-          <WaitingForDriver waitingForDriver={waitingForDriver} setWaitingForDriver={setWaitingForDriver}/>
+        <WaitingForDriver waitingForDriver={waitingForDriver} setWaitingForDriver={setWaitingForDriver} />
       </div>
     </div>
   );

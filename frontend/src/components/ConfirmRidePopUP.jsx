@@ -5,7 +5,7 @@ const ConfirmRidePopUP = (props) => {
 
     const [otp, setotp] = useState("")
 
-    const submitHandler= (e) => {
+    const submitHandler = (e) => {
         e.preventDefault()
     }
 
@@ -52,22 +52,22 @@ const ConfirmRidePopUP = (props) => {
                         </div>
                     </div>
                 </div>
-                
+
                 <div className='mt-6 w-full'>
-                    <form onSubmit={(e)=>{
+                    <form onSubmit={(e) => {
                         submitHandler(e)
                     }}>
 
-                     <input value={otp} onChange={(e)=>setotp(e.target.value)} className="bg-[#eee] px-6 py-4 font-mono text-lg rounded-lg w-full mt-5" type="text" placeholder='Enter OTP' />   
-                    <Link to='/captian-riding' className='w-full mt-5 flex text-lg justify-center  bg-green-600 text-white font-semibold p-3 rounded-lg'>
-                    Confirm
-                </Link>
-                <button onClick={() => {
-                    props.setConfirmRidePopUPPanel(false)
-                    props.setridePopupPanel(false)
-                }} className='w-full mt-2 bg-red-600 text-lg text-white font-semibold p-3 rounded-lg'>
-                    Cancel
-                </button>
+                        <input value={otp} onChange={(e) => setotp(e.target.value)} className="bg-[#eee] px-6 py-4 font-mono text-lg rounded-lg w-full mt-5" type="text" placeholder='Enter OTP' />
+                        <Link to='/captian-riding' className='w-full mt-5 flex text-lg justify-center  bg-green-600 text-white font-semibold p-3 rounded-lg'>
+                            Confirm
+                        </Link>
+                        <button onClick={() => {
+                            props.setConfirmRidePopUPPanel(false)
+                            props.setridePopupPanel(false)
+                        }} className='w-full mt-2 bg-red-600 text-lg text-white font-semibold p-3 rounded-lg'>
+                            Cancel
+                        </button>
                     </form>
                 </div>
             </div>

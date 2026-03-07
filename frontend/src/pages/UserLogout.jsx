@@ -15,20 +15,20 @@ function UserLogout() {
         Authorization: `Bearer ${token}`
       }
     })
-    .then((response) => {
+      .then((response) => {
 
-      if (response.status === 200) {
+        if (response.status === 200) {
 
-        localStorage.removeItem("token");
-        toast.success("User successfully logged out 👋");
-        navigate("/user-login");
+          localStorage.removeItem("token");
+          toast.success("User successfully logged out 👋");
+          navigate("/user-login");
 
-      }
+        }
 
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
   }, []);
 
