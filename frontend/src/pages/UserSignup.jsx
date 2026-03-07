@@ -101,7 +101,7 @@ const UserSignup = () => {
 
             <h3 className="text-lg font-medium mb-2">Enter Password</h3>
 
-        
+
             <input
               className="bg-[#eeeeee] mb-6 rounded px-4 py-2 border w-full text-lg"
               type="password"

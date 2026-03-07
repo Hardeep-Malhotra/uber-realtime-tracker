@@ -41,10 +41,10 @@ const CaptainRiding = () => {
                 />
             </div>
             <div className='h-1/5 p-6 bg-yellow-400 relative flex items-center justify-between '
-            
-            onClick={()=>{
-                setFinishRidePanel(true)
-            }}
+
+                onClick={() => {
+                    setFinishRidePanel(true)
+                }}
             >
                 <h5
                     className="p-1 text-center w-[85%] absolute top-0"

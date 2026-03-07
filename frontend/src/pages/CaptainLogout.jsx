@@ -32,7 +32,7 @@ const CaptainLogout = () => {
 
         navigate("/captain-login");
 
-      } catch (error) {
+      } catch {
 
         localStorage.removeItem("captain-token");
 

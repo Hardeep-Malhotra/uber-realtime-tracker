@@ -13,7 +13,7 @@ const CaptainLogin = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-   if (password.length < 6) {
+    if (password.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;
     }
