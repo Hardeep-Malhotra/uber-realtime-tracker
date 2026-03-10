@@ -1,57 +1,46 @@
 const captainController = require("../controllers/captain.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
+const uploadMiddleware = require("../middlewares/upload.middleware");
 const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
 
+
 router.post(
   "/register",
+  uploadMiddleware.single("profileImage"),
   [
-    // Email validation
+    body("firstname")
+      .isLength({ min: 2 })
+      .withMessage("First name must be at least 2 characters long"),
+
     body("email")
       .isEmail()
-      .withMessage("Invalid email address. Please enter a valid email."),
+      .withMessage("Invalid email"),
 
-    // First name validation
-    body("fullname.firstname")
-      .isLength({ min: 2 })
-      .withMessage("First name must be at least 2 characters long."),
-
-    // Last name validation
-    body("fullname.lastname")
-      .optional()
-      .isLength({ min: 2 })
-      .withMessage("Last name must be at least 2 characters long."),
-
-    // Password validation
     body("password")
       .isLength({ min: 8 })
-      .withMessage("Password must be at least 8 characters long."),
+      .withMessage("Password must be at least 8 characters"),
 
-    // Vehicle Color
-    body("vehicle.color")
+    body("color")
       .isLength({ min: 3 })
-      .withMessage("Vehicle color must be at least 3 characters long."),
+      .withMessage("Vehicle color must be at least 3 characters"),
 
-    // Vehicle Plate
-    body("vehicle.plate")
+    body("plate")
       .isLength({ min: 3 })
-      .withMessage("Vehicle plate number must be at least 3 characters long."),
+      .withMessage("Vehicle plate must be at least 3 characters"),
 
-    // Vehicle Capacity
-    body("vehicle.capacity")
+    body("capacity")
       .isInt({ min: 1 })
-      .withMessage("Vehicle capacity must be at least 1."),
+      .withMessage("Capacity must be at least 1"),
 
-    // Vehicle Type
-    body("vehicle.vehicleType")
+    body("vehicleType")
       .isIn(["bus", "auto", "car", "moto"])
-      .withMessage("Invalid vehicle type. Allowed types: bus, auto, car, van"),
+      .withMessage("Invalid vehicle type")
   ],
 
-  captainController.registerCaptain,
+  captainController.registerCaptain
 );
-
 router.post(
   "/login",
   [

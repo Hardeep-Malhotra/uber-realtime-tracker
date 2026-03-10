@@ -1,36 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const LocationSearchPanel = (props) => {
-  // console.log(props);
-  // sample array of location
-  const locations = [
-    "Rahul Sharma, 123 MG Road, Bengaluru, Karnataka, 560001, India",
-    "Thomas Mueller, Hostatostrasse 16, Frankfurt, Hesse, 65929, Germany",
-    "Sarah Wilson, 162-168 Regent Street, London, Greater London, W1B 5TG, UK",
-    "Cecilia Chapman, 711-2880 Nulla St., Mankato, Mississippi, 96522, USA",
-  ];
+const LocationSearchPanel = ({
+  query,
+  setPickup,
+  setDestination,
+  activeField,
+}) => {
 
+  const [suggestions, setSuggestions] = useState([]);
+
+useEffect(() => {
+
+  if (!query || query.trim() === "") {
+    setSuggestions([]); // clear suggestions
+    
+    return;
+  }
+
+  const fetchSuggestions = async () => {
+
+    try {
+
+// sir ye backend se data a rha but     "http://localhost:4000/maps/get-suggestions" rout pr api lgi hui h 
+      const res = await axios.get(
+        "http://localhost:4000/maps/get-suggestions",
+        {
+          params: { input: query },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        }
+      );
+
+      setSuggestions(res.data);
+
+    } catch (error) {
+      console.log(error);
+    }
+
+  };
+
+  fetchSuggestions();
+
+}, [query]);
   return (
     <div>
-      {/* this is a sample data */}
-      {locations.map(function (elem) {
-        return (
-          <div
-            onClick={() => {
-              props.setVehiclePanel(true),
-              props.setpanaelOpen(false)
 
-            }}
-            key={elem}
-            className="flex gap-3 rounded-xl border-gray-50 active:border-black border-2 p-3 my-2 items-center justify-start"
-          >
-            <h2 className="bg-[#eee] rounded-full h-6 w-9 mr-3 justify-center flex item-center">
-              <i className="ri-map-pin-line text-xl"></i>
-            </h2>
-            <h4 className="font-medium">{elem}</h4>
-          </div>
-        );
-      })}
+      {suggestions.map((elem, index) => (
+
+        <div
+          key={index}
+          onClick={() => {
+
+            if (activeField === "pickup") {
+              setPickup(elem.description);
+            } else {
+              setDestination(elem.description);
+            }
+
+          }}
+          className="flex gap-3 rounded-xl border-gray-200 active:border-black border-2 p-3 my-2 items-center justify-start"
+        >
+
+          <h2 className="bg-[#eee] rounded-full h-6 w-9 mr-3 flex items-center justify-center">
+            <i className="ri-map-pin-line text-xl"></i>
+          </h2>
+
+          <h4 className="font-medium">{elem.description}</h4>
+
+        </div>
+
+      ))}
+
     </div>
   );
 };

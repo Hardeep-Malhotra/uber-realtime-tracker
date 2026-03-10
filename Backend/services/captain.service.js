@@ -9,6 +9,7 @@ module.exports.createCaptain = async ({
   plate,
   capacity,
   vehicleType,
+  profileImage,
 }) => {
   if (
     !firstname ||
@@ -30,13 +31,17 @@ module.exports.createCaptain = async ({
 
     email,
     password,
-
+    profileImage,
     vehicle: {
       color,
       plate,
       capacity,
       vehicleType,
     },
+      location: {
+    type: "Point",
+    coordinates: [0, 0],
+  },
   });
 
   return captain;

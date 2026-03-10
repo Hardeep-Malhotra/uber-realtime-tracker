@@ -16,32 +16,41 @@ const Captainsignup = () => {
   const [vehicleCapacity, setVehicleCapacity] = useState("");
   const [vehicleType, setVehicleType] = useState("");
 
+  const [profileImage, setProfileImage] = useState(null);
+  const [preview, setPreview] = useState(null);
+
   const { setCaptain } = useContext(CaptainDataContext);
   const navigate = useNavigate();
 
   const validateCapacity = () => {
     const capacity = Number(vehicleCapacity);
+
     if (vehicleType === "moto" && capacity > 2) {
       toast.error("Moto capacity cannot exceed 2");
       return false;
     }
+
     if (vehicleType === "auto" && capacity > 3) {
       toast.error("Auto capacity cannot exceed 3");
       return false;
     }
+
     if (vehicleType === "car" && capacity > 5) {
       toast.error("Car capacity cannot exceed 5");
       return false;
     }
+
     if (vehicleType === "bus" && capacity > 60) {
       toast.error("Bus capacity cannot exceed 60");
       return false;
     }
+
     return true;
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
     if (!validateCapacity()) return;
 
     if (password.length < 6) {
@@ -49,49 +58,46 @@ const Captainsignup = () => {
       return;
     }
 
-    const newCaptain = {
-      fullname: {
-        firstname: first,
-        lastname: second,
-      },
-      email,
-      password,
-      vehicle: {
-        color: vehicleColor,
-        plate: vehiclePlate,
-        capacity: Number(vehicleCapacity),
-        vehicleType: vehicleType,
-      },
-    };
+    const formData = new FormData();
 
+    formData.append("firstname", first);
+    formData.append("lastname", second);
+    formData.append("email", email);
+    formData.append("password", password);
+
+    formData.append("color", vehicleColor);
+    formData.append("plate", vehiclePlate);
+    formData.append("capacity", vehicleCapacity);
+    formData.append("vehicleType", vehicleType);
+
+    if (profileImage) {
+      formData.append("profileImage", profileImage);
+    }
+    console.log(profileImage);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/captains/register`,
-        newCaptain,
+        formData,
       );
 
       if (response.status === 201) {
         const data = response.data;
+
         setCaptain(data.captain);
+
         localStorage.setItem("captain-token", data.token);
+
         toast.success("Captain account created 🚌");
+
         setTimeout(() => {
           navigate("/captain-home");
         }, 1000);
       }
     } catch (error) {
       console.log("Backend Error:", error.response?.data);
+
       toast.error("Captain registration failed ❌");
     }
-
-    setFirst("");
-    setSecond("");
-    setEmail("");
-    setPassword("");
-    setVehicleColor("");
-    setVehiclePlate("");
-    setVehicleCapacity("");
-    setVehicleType("");
   };
 
   return (
@@ -100,9 +106,12 @@ const Captainsignup = () => {
         <img className="w-20 mb-3" src={driverLogo} alt="uber driver" />
 
         <form onSubmit={submitHandler}>
+          {/* NAME */}
+
           <h3 className="text-lg font-medium mb-2">
             What's our Captain's name
           </h3>
+
           <div className="flex gap-4 mb-7">
             <input
               required
@@ -112,6 +121,7 @@ const Captainsignup = () => {
               value={first}
               onChange={(e) => setFirst(e.target.value)}
             />
+
             <input
               required
               className="bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border text-lg"
@@ -122,9 +132,10 @@ const Captainsignup = () => {
             />
           </div>
 
-          <h3 className="text-lg font-medium mb-2">
-            What's our Captain's email
-          </h3>
+          {/* EMAIL */}
+
+          <h3 className="text-lg font-medium mb-2">Captain Email</h3>
+
           <input
             required
             className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg"
@@ -134,7 +145,10 @@ const Captainsignup = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          <h3 className="text-lg font-medium mb-2">Enter Password</h3>
+          {/* PASSWORD */}
+
+          <h3 className="text-lg font-medium mb-2">Password</h3>
+
           <input
             required
             className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg"
@@ -144,7 +158,32 @@ const Captainsignup = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
 
+          {/* PROFILE IMAGE */}
+
+          <h3 className="text-lg font-medium mb-2">Captain Photo</h3>
+
+          {preview && (
+            <img
+              src={preview}
+              className="w-20 h-20 rounded-full object-cover mb-4"
+              alt="preview"
+            />
+          )}
+
+          <input
+            type="file"
+            accept="image/*"
+            className="mb-7"
+            onChange={(e) => {
+              setProfileImage(e.target.files[0]);
+              setPreview(URL.createObjectURL(e.target.files[0]));
+            }}
+          />
+
+          {/* VEHICLE INFO */}
+
           <h3 className="text-lg font-medium mb-2">Vehicle Information</h3>
+
           <div className="flex gap-4 mb-7">
             <input
               required
@@ -154,6 +193,7 @@ const Captainsignup = () => {
               value={vehicleColor}
               onChange={(e) => setVehicleColor(e.target.value)}
             />
+
             <input
               required
               className="bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border text-lg"
@@ -173,6 +213,7 @@ const Captainsignup = () => {
               value={vehicleCapacity}
               onChange={(e) => setVehicleCapacity(e.target.value)}
             />
+
             <select
               required
               className="bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border text-lg"
@@ -197,15 +238,6 @@ const Captainsignup = () => {
           <Link to="/captain-login" className="text-blue-600">
             Login here
           </Link>
-        </p>
-      </div>
-      <div>
-        <p className="text-[10px] leading-tight text-gray-500 text-center mt-4">
-          This site is protected by reCAPTCHA and the
-          <span className="underline"> Google Privacy Policy </span>
-          and
-          <span className="underline"> Terms of Service</span>
-          apply.
         </p>
       </div>
     </div>

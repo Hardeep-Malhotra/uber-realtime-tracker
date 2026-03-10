@@ -35,6 +35,10 @@ const captainSchema = new mongoose.Schema({
     minlength: [6, "Password must be at least 6 characters long"],
     select: false,
   },
+  profileImage: {
+    type: String,
+    default: "",
+  },
 
   socketId: {
     type: String,
@@ -43,7 +47,7 @@ const captainSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["active", "inactive"],
-    default: "inactive",
+    default: "active",
   },
 
   vehicle: {
@@ -73,14 +77,17 @@ const captainSchema = new mongoose.Schema({
   },
 
   location: {
-    lat: {
-      type: Number,
+    type: {
+      type: String,
+      enum: ["Point"],
+      default: "Point",
     },
-    lng: {
-      type: Number,
+    coordinates: {
+      type: [Number], // [lng, lat]
     },
   },
 });
+captainSchema.index({ location: "2dsphere" });
 
 // 🔐 Hash password before saving
 captainSchema.pre("save", async function () {
